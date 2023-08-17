@@ -8,7 +8,6 @@ const App = () => {
   return (
     <div className="overflow-hidden">
       <Navbar />
-      <Sidebar/>
       <Header />
       <CardsList />
     </div>

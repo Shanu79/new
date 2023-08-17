@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import { useEffect, useState } from "react";
-import AddSubCard from "../components/subcards/AddSubCard";
 import AddCard from "../components/card/AddCard";
-import SubCard from "../components/subcards/SubCard"
+import Card from "../components/card/Card"
 import mockData from "../mockData";
 
 const CardsList = () => {
@@ -79,50 +78,16 @@ const CardsList = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div
-        className="flex items-start overflow-x-auto overflow-y-hidden scrollbar pb-2 ml-[44px]"
-        style={{ height: "calc(100vh - 142px)" }}
+        className="flex items-start overflow-x-auto overflow-y-hidden scrollbar pb-2 pl-12"
+        style={{ height: 'calc(100vh - 142px)' }}
       >
         {data.map((section) => (
-          <Droppable key={section.id} droppableId={section.id}>
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                className="bg-[#EBECF0] pt-3 px-2 mx-1 rounded-sm w-[272px] min-w-[272px] h-auto shadow-md overflow-y-auto overflow-x-hidden"
-                style={{ maxHeight: "calc(100vh - 180px)" }}
-                ref={provided.innerRef}
-              >
-                <div className="flex items-center justify-between">
-                  <h1 className="font-medium p-1">{section.title}</h1>
-                  <h1 className="hover:cursor-pointer font-black px-1">...</h1>
-                </div>
-
-                <div className="kanban__section__content">
-                  {section.tasks.map((task, index) => (
-                    <Draggable
-                      key={task.id}
-                      draggableId={task.id}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <SubCard
-                          key={task.id}
-                          title={task?.title}
-                          id={task.id}
-                          cardId={section.id}
-                          innerRef={provided.innerRef}
-                          provided={provided}
-                        >
-                          {task.title}
-                        </SubCard>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-                <AddSubCard handleAddSubCard={addSubCard} cardId={section.id} />
-              </div>
-            )}
-          </Droppable>
+          <Card
+            key={section.id}
+            section={section}
+            addSubCard={addSubCard}
+            addCard={addCard}
+          />
         ))}
         <AddCard handleAddCard={addCard} />
       </div>

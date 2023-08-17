@@ -1,5 +1,5 @@
 {
-  "name": "project-trello-clone",
+  "name": "project-HiveMindSync",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -39,7 +39,6 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
-    "postcss": "^8.4.14",
-    "tailwindcss": "^3.1.6"
+    "postcss": "^8.4.14"
   }
 }
