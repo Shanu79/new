@@ -1,17 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useEffect, useState } from "react";
-import AddCard from "../components/card/AddCard";
 import Card from "../components/card/Card"
 import mockData from "../mockData";
+import HeadCard from "./headcard/HeadCard";
 
 const CardsList = () => {
 
-  const getlocalItems=()=>{
-    let list=localStorage.getItem('lists');
-    console.log(list);
+  const getlocalItems = () => {
+    let list = localStorage.getItem('lists');
 
-    if(list) {
+    if (list) {
       return JSON.parse(localStorage.getItem('lists'));
     }
     else {
@@ -43,7 +42,7 @@ const CardsList = () => {
       data[destinationColIndex].tasks = destinationTask;
 
       setData(data);
-      localStorage.setItem('lists',JSON.stringify(data))
+      localStorage.setItem('lists', JSON.stringify(data))
     }
   };
 
@@ -55,7 +54,7 @@ const CardsList = () => {
     };
     const newCards = [...data, newCard];
     setData(newCards);
-    localStorage.setItem('lists',JSON.stringify(data))
+    localStorage.setItem('lists', JSON.stringify(data))
   };
 
   const addSubCard = (title, cardId) => {
@@ -68,28 +67,32 @@ const CardsList = () => {
     const tempCards = [...data];
     tempCards[index].tasks.push(newSubCard);
     setData(tempCards);
-    localStorage.setItem('lists',JSON.stringify(data))
+    localStorage.setItem('lists', JSON.stringify(data))
   };
 
-  useEffect(()=>{
-    localStorage.setItem('lists',JSON.stringify(data))
-  },[data]);
+  useEffect(() => {
+    localStorage.setItem('lists', JSON.stringify(data))
+  }, [data]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div
-        className="flex items-start overflow-x-auto overflow-y-hidden scrollbar pb-2 pl-12"
+        className="flex items-start overflow-x-auto overflow-y-hidden pl-11"
         style={{ height: 'calc(100vh - 142px)' }}
       >
         {data.map((section) => (
-          <Card
+          <div><HeadCard
             key={section.id}
             section={section}
-            addSubCard={addSubCard}
             addCard={addCard}
+            addSubCard={addSubCard}
           />
+            <Card
+              key={section.id}
+              section={section}
+              addSubCard={addSubCard}
+            /></div>
         ))}
-        <AddCard handleAddCard={addCard} />
       </div>
     </DragDropContext>
   );

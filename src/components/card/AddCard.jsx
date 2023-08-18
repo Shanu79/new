@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AddCardBtn from "./AddCardBtn";
+import "./card.css"
 
 const AddCard = ({ handleAddCard }) => {
   const [title, setTitle] = useState("");
@@ -23,6 +24,7 @@ const AddCard = ({ handleAddCard }) => {
   return (
     <>
       {isClicked ? (
+        <>
         <div className="bg-[#EBECF0] px-2 pt-2.5 pb-2 ml-1 h-fit w-[272px] min-w-[272px] rounded-sm shadow-md mr-2">
           <form onSubmit={handleSaveClick}>
             <input
@@ -48,7 +50,8 @@ const AddCard = ({ handleAddCard }) => {
               </span>
             </div>
           </form>
-        </div>
+          </div>
+        </>
       ) : (
         <AddCardBtn isClick={handleIsClicked} />
       )}
