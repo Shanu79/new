@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AddSubCardBtn from "./AddSubCardBtn";
+import AddSubCardBtn from "../headcard/AddSubCardBtn";
 
 const AddSubCard = ({handleAddSubCard, cardId}) => {
   const [isClicked, setClicked] = useState(false);
@@ -18,13 +18,12 @@ const AddSubCard = ({handleAddSubCard, cardId}) => {
     handleAddSubCard(cardTitle,cardId);
     setTitle('');
     setClicked(!isClicked);
-    
   }
 
   return (
     <>
       {isClicked ? (
-        <div className="bg-[#EBECF0] rounded-sm pb-2">
+        <div className="bg-[#FFF] px-2 py-2 my-2 rounded-md w-[350px] min-w-[350px] h-[90px] shadow-md z-10">
           <form onSubmit={handleSaveClick}>
             <input
               className="px-3 py-2 text-sm border-blue-600 rounded-sm border-2 mb-2 focus:outline-0"
@@ -39,7 +38,7 @@ const AddSubCard = ({handleAddSubCard, cardId}) => {
                 className="px-4 py-2 w-fit text-sm text-white  bg-[#0079BF] hover:bg-[#0b6fa9] rounded-sm"
                 type="submit"
               >
-                Add card
+                Add
               </button>
               <span
                 className="material-symbols-outlined hover:cursor-pointer"

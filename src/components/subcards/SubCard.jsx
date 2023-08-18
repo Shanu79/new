@@ -1,9 +1,10 @@
 import React from "react";
+import "./subcard.css";
 
 const SubCard = (props) => {
   return (
     <div
-      className=" h-[35px] font-light px-2 py-1 my-2 rounded-sm shadow-md"
+      className="subcard"
       {...props.provided.draggableProps}
       {...props.provided.dragHandleProps}
       ref={props.innerRef}

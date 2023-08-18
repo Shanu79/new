@@ -1,13 +1,35 @@
-import React from "react";
+import React, {useState} from "react";
+import "./navCss.css";
 
 const Navbar = () => {
+
+  const [viewer, setViewer] = useState(false);
+
   return (
     <>
-      <div className="bg-[#fff] flex items-center h-[45px] py-7 w-full pl-6">
-            <div className=" flex items-center text-sm shadow-md hover:bg-[#f4f5f8] px-1 border-solid border-2 border-zinc-100 rounded-md">
-            <span class="material-symbols-outlined text-sm">tune</span>
-              <h1 className="text-xs font-medium px-1">Display</h1>
-              <span className="material-symbols-outlined text-sm">expand_more</span>
+      <div className="header">
+        <div onClick={()=>{
+                setViewer(!viewer);
+              }} className={`selector`}>
+            <span className="material-symbols-outlined">tune</span>
+              <button>Display</button>
+              <span className="material-symbols-outlined">expand_more</span>
+            </div>
+      </div>
+      <div className={`selector-expand ${viewer? 'selector-expand-clicked':''}`}>
+            <div className="label">
+              <h1>Grouping</h1>
+            </div>
+            <div className="selector">
+              <h1>Status</h1>
+              <span className="material-symbols-outlined">expand_more</span>
+            </div>
+            <div className="label">
+              <h1>Ordering</h1>
+            </div>
+            <div className="selector">
+              <h1>Priority</h1>
+              <span className="material-symbols-outlined">expand_more</span>
             </div>
       </div>
     </>
