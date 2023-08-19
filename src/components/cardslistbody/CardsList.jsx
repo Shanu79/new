@@ -37,49 +37,53 @@ const CardsList = () => {
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
+    const { source, destination } = result;
 
-    const updatedData = [...data];
-    const sourceIndex = updatedData.findIndex(
-      (item) => item.id === result.source.droppableId
-    );
-    const destinationIndex = updatedData.findIndex(
-      (item) => item.id === result.destination.droppableId
-    );
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColIndex = data.findIndex((e) => e.id === source.droppableId);
+      const destinationColIndex = data.findIndex(
+        (e) => e.id === destination.droppableId
+      );
 
-    if (sourceIndex !== -1 && destinationIndex !== -1) {
-      const [movedItem] = updatedData[sourceIndex].tasks.splice(
-        result.source.index,
-        1
-      );
-      updatedData[destinationIndex].tasks.splice(
-        result.destination.index,
-        0,
-        movedItem
-      );
-      setData(updatedData);
+      const sourceCol = data[sourceColIndex];
+      const destinationCol = data[destinationColIndex];
+
+      const sourceTask = [...sourceCol.tasks];
+      const destinationTask = [...destinationCol.tasks];
+
+      const [removed] = sourceTask.splice(source.index, 1);
+      destinationTask.splice(destination.index, 0, removed);
+
+      data[sourceColIndex].tasks = sourceTask;
+      data[destinationColIndex].tasks = destinationTask;
+
+      setData(data);
+      localStorage.setItem('lists', JSON.stringify(data))
     }
   };
 
   const addCard = (title) => {
     const newCard = {
-      id: `CAM-${data.length + 1}`,
+      id: uuidv4(),
       title,
       tasks: [],
     };
     const newCards = [...data, newCard];
     setData(newCards);
+    localStorage.setItem('lists', JSON.stringify(data))
   };
 
   const addSubCard = (title, cardId) => {
-    const index = data.findIndex((item) => item.id === cardId);
-    if (index < 0) return;
-    const tempCards = [...data];
     const newSubCard = {
       id: uuidv4(),
       title,
     };
+    const index = data.findIndex((item) => item.id === cardId);
+    if (index < 0) return;
+    const tempCards = [...data];
     tempCards[index].tasks.push(newSubCard);
     setData(tempCards);
+    localStorage.setItem('lists', JSON.stringify(data))
   };
  
   const grouping = useSelector((state) => state.grouping);
@@ -90,8 +94,11 @@ const CardsList = () => {
     if (!groupedData[temp]) {
       groupedData[temp] = [];
     }
+    ticket.id1=uuidv4()
     groupedData[temp].push(ticket);
   });
+
+  console.log(groupedData)
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -100,10 +107,10 @@ const CardsList = () => {
         {Object.entries(groupedData).map(([title, tickets]) => (
           <div key={title}>
             <HeadCard key={title} count={tickets.length} tickets={tickets} title={title} />
-            {tickets.map((ticket) => (
-              <Card section={ticket} key={ticket.id}
+            
+              <Card section={tickets}
                 addSubCard={addSubCard} />
-            ))}
+      
           </div>
         ))}
       </div>

@@ -3,7 +3,9 @@ import "./subcard.css";
 
 const SubCard = (props) => {
   return (
-    <div className="subcard">
+    <div className="subcard" {...props.provided.draggableProps}
+    {...props.provided.dragHandleProps}
+    ref={props.innerRef}>
       <div className="flex justify-between">
         <span className="text-sm">{props.id}</span>
         <span class="material-symbols-outlined">
