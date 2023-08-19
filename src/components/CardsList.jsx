@@ -79,18 +79,40 @@ const CardsList = () => {
     tempCards[index].tasks.push(newSubCard);
     setData(tempCards);
   };
+
+  //grouping data for status view
+  const groupedData = {};
+  data.map((ticket, index) => {
+    const temp = ticket.status;
+    if (!groupedData[temp]) {
+      groupedData[temp] = [];
+    }
+    groupedData[temp].push(ticket);
+  });
+
+  //grouping data for priority view
+  const pGroupedData = {};
+  data.map((ticket, index) => {
+    const temp = ticket.priority;
+    if (!pGroupedData[temp]) {
+      pGroupedData[temp] = [];
+    }
+    pGroupedData[temp].push(ticket);
+  });
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div
         className="flex items-start overflow-x-auto overflow-y-hidden pl-11"
         style={{ height: "calc(100vh - 142px)" }}
       >
-        {data.map((ticket, index) => (
-          <div key={ticket.id}>
-            <HeadCard section={ticket}/>
-            <Card section={ticket} key={ticket.id}
-              addSubCard={addSubCard}
-              index={index}/>
+        {Object.entries(pGroupedData).map(([title, tickets]) => (
+          <div key={title}>
+            <HeadCard key={title} count={tickets.length} tickets={tickets} title={title} />
+            {tickets.map((ticket) => (
+              <Card section={ticket} key={ticket.id}
+                addSubCard={addSubCard} />
+            ))}
           </div>
         ))}
       </div>

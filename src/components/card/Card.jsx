@@ -4,7 +4,6 @@ import SubCard from "../subcards/SubCard";
 import "./card.css";
 
 const Card = ({ section, index }) => {
-  console.log(index)
     return (
           <Droppable key={section.id} droppableId={section.id}>
             {(provided) => (
@@ -23,6 +22,7 @@ const Card = ({ section, index }) => {
                           key={section.id}
                           title={section?.title}
                           id={section.id}
+                          tag={section.tag}
                           cardId={section.id}
                           innerRef={provided.innerRef}
                           provided={provided}/>
