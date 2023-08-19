@@ -1,15 +1,12 @@
 import React from "react";
 import "./subcard.css";
 
-const SubCard = (props) => {
+const SubCard = ({title}) => {
   return (
     <div
       className="subcard"
-      {...props.provided.draggableProps}
-      {...props.provided.dragHandleProps}
-      ref={props.innerRef}
     >
-      <p>{props.title}</p>
+      <p>{title}</p>
     </div>
   );
 };

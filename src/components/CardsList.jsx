@@ -1,97 +1,97 @@
 import { v4 as uuidv4 } from "uuid";
+import React, { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { useEffect, useState } from "react";
-import Card from "../components/card/Card"
-import mockData from "../mockData";
+import Card from "../components/card/Card";
 import HeadCard from "./headcard/HeadCard";
 
 const CardsList = () => {
+  const [data, setData] = useState([]);
+  const [users, setUsers] = useState([]);
 
-  const getlocalItems = () => {
-    let list = localStorage.getItem('lists');
+  const fetchDataFromAPI = async () => {
+    try {
+      const response = await fetch(
+        "https://api.quicksell.co/v1/internal/frontend-assignment"
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return null;
+    }
+  };
 
-    if (list) {
-      return JSON.parse(localStorage.getItem('lists'));
-    }
-    else {
-      return mockData;
-    }
-  }
-  const [data, setData] = useState(getlocalItems());
+  useEffect(() => {
+    fetchDataFromAPI().then((response) => {
+      if (response) {
+        setData(response.tickets);
+        setUsers(response.users);
+      }
+    });
+  }, []);
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
-    const { source, destination } = result;
 
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColIndex = data.findIndex((e) => e.id === source.droppableId);
-      const destinationColIndex = data.findIndex(
-        (e) => e.id === destination.droppableId
+    const updatedData = [...data];
+    const sourceIndex = updatedData.findIndex(
+      (item) => item.id === result.source.droppableId
+    );
+    const destinationIndex = updatedData.findIndex(
+      (item) => item.id === result.destination.droppableId
+    );
+
+    if (sourceIndex !== -1 && destinationIndex !== -1) {
+      const [movedItem] = updatedData[sourceIndex].tasks.splice(
+        result.source.index,
+        1
       );
-
-      const sourceCol = data[sourceColIndex];
-      const destinationCol = data[destinationColIndex];
-
-      const sourceTask = [...sourceCol.tasks];
-      const destinationTask = [...destinationCol.tasks];
-
-      const [removed] = sourceTask.splice(source.index, 1);
-      destinationTask.splice(destination.index, 0, removed);
-
-      data[sourceColIndex].tasks = sourceTask;
-      data[destinationColIndex].tasks = destinationTask;
-
-      setData(data);
-      localStorage.setItem('lists', JSON.stringify(data))
+      updatedData[destinationIndex].tasks.splice(
+        result.destination.index,
+        0,
+        movedItem
+      );
+      setData(updatedData);
     }
   };
 
   const addCard = (title) => {
     const newCard = {
-      id: uuidv4(),
+      id: `CAM-${data.length + 1}`,
       title,
       tasks: [],
     };
     const newCards = [...data, newCard];
     setData(newCards);
-    localStorage.setItem('lists', JSON.stringify(data))
   };
 
   const addSubCard = (title, cardId) => {
+    const index = data.findIndex((item) => item.id === cardId);
+    if (index < 0) return;
+    const tempCards = [...data];
     const newSubCard = {
       id: uuidv4(),
       title,
     };
-    const index = data.findIndex((item) => item.id === cardId);
-    if (index < 0) return;
-    const tempCards = [...data];
     tempCards[index].tasks.push(newSubCard);
     setData(tempCards);
-    localStorage.setItem('lists', JSON.stringify(data))
   };
-
-  useEffect(() => {
-    localStorage.setItem('lists', JSON.stringify(data))
-  }, [data]);
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div
         className="flex items-start overflow-x-auto overflow-y-hidden pl-11"
-        style={{ height: 'calc(100vh - 142px)' }}
+        style={{ height: "calc(100vh - 142px)" }}
       >
-        {data.map((section) => (
-          <div><HeadCard
-            key={section.id}
-            section={section}
-            addCard={addCard}
-            addSubCard={addSubCard}
-          />
-            <Card
-              key={section.id}
-              section={section}
+        {data.map((ticket, index) => (
+          <div key={ticket.id}>
+            <HeadCard section={ticket}/>
+            <Card section={ticket} key={ticket.id}
               addSubCard={addSubCard}
-            /></div>
+              index={index}/>
+          </div>
         ))}
       </div>
     </DragDropContext>

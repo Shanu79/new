@@ -3,7 +3,8 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import SubCard from "../subcards/SubCard";
 import "./card.css";
 
-const Card = ({section, addSubCard}) => {
+const Card = ({ section, index }) => {
+  console.log(index)
     return (
           <Droppable key={section.id} droppableId={section.id}>
             {(provided) => (
@@ -12,26 +13,21 @@ const Card = ({section, addSubCard}) => {
                 className="card"
                 ref={provided.innerRef}
               >
-                  {section.tasks.map((task, index) => (
                     <Draggable
-                      key={task.id}
-                      draggableId={task.id}
+                      key={section.id}
+                      draggableId={section.id}
                       index={index}
                     >
                       {(provided) => (
                         <SubCard
-                          key={task.id}
-                          title={task?.title}
-                          id={task.id}
+                          key={section.id}
+                          title={section?.title}
+                          id={section.id}
                           cardId={section.id}
                           innerRef={provided.innerRef}
-                          provided={provided}
-                        >
-                          {task.title}
-                        </SubCard>
+                          provided={provided}/>
                       )}
                     </Draggable>
-                  ))}
                   {provided.placeholder}
               </div>
             )}
