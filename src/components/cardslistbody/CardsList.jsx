@@ -1,23 +1,39 @@
 import { v4 as uuidv4 } from "uuid";
+import React, { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { useEffect, useState } from "react";
-import Card from "../components/card/Card"
-import mockData from "../mockData";
-import HeadCard from "./headcard/HeadCard";
+import Card from "../card/Card";
+import HeadCard from "../headcard/HeadCard";
+import { useSelector } from "react-redux"; 
+import "./cardslist.css"
 
 const CardsList = () => {
+  const [data, setData] = useState([]);
+  const [users, setUsers] = useState([]);
 
-  const getlocalItems = () => {
-    let list = localStorage.getItem('lists');
+  const fetchDataFromAPI = async () => {
+    try {
+      const response = await fetch(
+        "https://api.quicksell.co/v1/internal/frontend-assignment"
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return null;
+    }
+  };
 
-    if (list) {
-      return JSON.parse(localStorage.getItem('lists'));
-    }
-    else {
-      return mockData;
-    }
-  }
-  const [data, setData] = useState(getlocalItems());
+  useEffect(() => {
+    fetchDataFromAPI().then((response) => {
+      if (response) {
+        setData(response.tickets);
+        setUsers(response.users);
+      }
+    });
+  }, []);
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -69,29 +85,33 @@ const CardsList = () => {
     setData(tempCards);
     localStorage.setItem('lists', JSON.stringify(data))
   };
+ 
+  const grouping = useSelector((state) => state.grouping);
+  //grouping data for status/priority view
+  const groupedData = {};
+  data.map((ticket, index) => {
+    const temp = grouping === "priority" ? ticket.priority : ticket.status;
+    if (!groupedData[temp]) {
+      groupedData[temp] = [];
+    }
+    ticket.id1=uuidv4()
+    groupedData[temp].push(ticket);
+  });
 
-  useEffect(() => {
-    localStorage.setItem('lists', JSON.stringify(data))
-  }, [data]);
+  console.log(groupedData)
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div
-        className="flex items-start overflow-x-auto overflow-y-hidden pl-11"
-        style={{ height: 'calc(100vh - 142px)' }}
-      >
-        {data.map((section) => (
-          <div><HeadCard
-            key={section.id}
-            section={section}
-            addCard={addCard}
-            addSubCard={addSubCard}
-          />
-            <Card
-              key={section.id}
-              section={section}
-              addSubCard={addSubCard}
-            /></div>
+        className={`cardslistbody`}>
+        {Object.entries(groupedData).map(([title, tickets]) => (
+          <div key={title}>
+            <HeadCard key={title} count={tickets.length} tickets={tickets} title={title} />
+            
+              <Card section={tickets}
+                addSubCard={addSubCard} />
+      
+          </div>
         ))}
       </div>
     </DragDropContext>
