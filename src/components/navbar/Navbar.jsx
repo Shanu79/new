@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import "./navCss.css";
+import { useSelector, useDispatch } from "react-redux";
+import { setGrouping } from "../../store/groupingSlice";
 
 const Navbar = () => {
-
   const [viewer, setViewer] = useState(false);
+  const grouping = useSelector((state) => state.grouping);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -21,7 +24,8 @@ const Navbar = () => {
           <h1>Grouping</h1>
         </div>
         <div className="selector">
-          <select>
+          <select value={grouping}
+            onChange={(e) => dispatch(setGrouping(e.target.value))}>
             <option value="status">Status</option>
             <option value="users">Users</option>
             <option value="priority">Priority</option>

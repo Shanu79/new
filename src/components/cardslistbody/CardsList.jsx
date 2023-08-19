@@ -1,8 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import Card from "../components/card/Card";
-import HeadCard from "./headcard/HeadCard";
+import Card from "../card/Card";
+import HeadCard from "../headcard/HeadCard";
+import { useSelector } from "react-redux"; 
+import "./cardslist.css"
 
 const CardsList = () => {
   const [data, setData] = useState([]);
@@ -79,34 +81,23 @@ const CardsList = () => {
     tempCards[index].tasks.push(newSubCard);
     setData(tempCards);
   };
-
-  //grouping data for status view
+ 
+  const grouping = useSelector((state) => state.grouping);
+  //grouping data for status/priority view
   const groupedData = {};
   data.map((ticket, index) => {
-    const temp = ticket.status;
+    const temp = grouping === "priority" ? ticket.priority : ticket.status;
     if (!groupedData[temp]) {
       groupedData[temp] = [];
     }
     groupedData[temp].push(ticket);
   });
 
-  //grouping data for priority view
-  const pGroupedData = {};
-  data.map((ticket, index) => {
-    const temp = ticket.priority;
-    if (!pGroupedData[temp]) {
-      pGroupedData[temp] = [];
-    }
-    pGroupedData[temp].push(ticket);
-  });
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div
-        className="flex items-start overflow-x-auto overflow-y-hidden pl-11"
-        style={{ height: "calc(100vh - 142px)" }}
-      >
-        {Object.entries(pGroupedData).map(([title, tickets]) => (
+        className={`cardslistbody`}>
+        {Object.entries(groupedData).map(([title, tickets]) => (
           <div key={title}>
             <HeadCard key={title} count={tickets.length} tickets={tickets} title={title} />
             {tickets.map((ticket) => (

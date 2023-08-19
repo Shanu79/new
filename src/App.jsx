@@ -1,5 +1,5 @@
 import React from "react";
-import CardsList from "./components/CardsList";
+import CardsList from "./components/cardslistbody/CardsList";
 import Navbar from "./components/navbar/Navbar"
 
 const App = () => {
