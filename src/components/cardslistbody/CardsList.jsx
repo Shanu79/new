@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Card from "../card/Card";
 import HeadCard from "../headcard/HeadCard";
-import { useSelector } from "react-redux"; 
+import { useSelector } from "react-redux";
 import "./cardslist.css"
 
 const CardsList = () => {
@@ -85,20 +85,19 @@ const CardsList = () => {
     setData(tempCards);
     localStorage.setItem('lists', JSON.stringify(data))
   };
- 
+
   const grouping = useSelector((state) => state.grouping);
   //grouping data for status/priority view
   const groupedData = {};
+
   data.map((ticket, index) => {
-    const temp = grouping === "priority" ? ticket.priority : ticket.status;
+    const temp = grouping === "priority" ? ticket.priority : grouping === "status" ? ticket.status : ticket.userId;
     if (!groupedData[temp]) {
       groupedData[temp] = [];
     }
-    ticket.id1=uuidv4()
+    ticket.id1 = uuidv4()
     groupedData[temp].push(ticket);
   });
-
-  console.log(groupedData)
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -106,11 +105,8 @@ const CardsList = () => {
         className={`cardslistbody`}>
         {Object.entries(groupedData).map(([title, tickets]) => (
           <div key={title}>
-            <HeadCard key={title} count={tickets.length} tickets={tickets} title={title} />
-            
-              <Card section={tickets}
-                addSubCard={addSubCard} />
-      
+            <HeadCard key={title} count={tickets.length} tickets={tickets} title={title} userdata={users} grouping={grouping} />
+            <Card section={tickets} addSubCard={addSubCard} userdata={users} grouping={grouping} />
           </div>
         ))}
       </div>
