@@ -1,4 +1,4 @@
-![image](https://github.com/Shanu79/project-HiveMind/assets/73595883/f7d94f18-f7f6-41f3-b611-afde76a69323)# Getting Started with Project-Trello-Clone
+# Getting Started with Project-Trello-Clone
 
 run ### `npm i` to install all dependencies.
 
