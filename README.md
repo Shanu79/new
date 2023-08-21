@@ -12,6 +12,7 @@ You may also see any lint errors in the console.
 SEE Delpoyment: https://project-trello-clone.vercel.app/
 
 
-![image](https://github.com/Shanu79/project-HiveMindSync/assets/73595883/b8483720-c3a3-4d75-8765-d17f65719816)
+![image](https://github.com/Shanu79/project-HiveMind/assets/73595883/1d6a6b7a-7917-4503-a03d-e16dbc6643d5)
+
 
 
